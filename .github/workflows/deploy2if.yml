@@ -1,0 +1,30 @@
+name: Deploy to IPFS
+
+permissions:
+  contents: read
+  pull-requests: write
+  statuses: write
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to IPFS
+        uses: ipfs/ipfs-deploy-action@v1
+        with:
+          path-to-deploy: .
+          github-status-gw: ${{ vars.IF_GW }}
+          kubo-api-url: ${{ secrets.KUBO_API_URL }}
+          kubo-api-auth: ${{ secrets.KUBO_API_AUTH }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
